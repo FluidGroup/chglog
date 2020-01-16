@@ -9,8 +9,8 @@ program
   .requiredOption('-l, --left <type>', 'left side ref')
   .requiredOption('-r, --right <type>', 'right side ref')
   .requiredOption('-t, --token <type>', 'GitHub API Token')
-  .requiredOption('--owner', 'Repogitory owner')
-  .requiredOption('--name', 'Repogitory name');
+  .requiredOption('--repo-owner', 'Repository owner')
+  .requiredOption('--repo-name', 'Repository name');
 
 program.parse(process.argv);
 
