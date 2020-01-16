@@ -1,0 +1,24 @@
+{
+  "name": "chglog",
+  "version": "0.0.0",
+  "description": "A change log generator",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/muukii/chglog.git"
+  },
+  "author": "muukii <muukii.muukii@gmail.com> (http://www.muukii.me/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/muukii/chglog/issues"
+  },
+  "homepage": "https://github.com/muukii/chglog#readme",
+  "dependencies": {
+    "@octokit/graphql": "^4.3.1",
+    "commander": "^4.0.1"
+  }
+}
