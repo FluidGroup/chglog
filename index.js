@@ -83,7 +83,7 @@ async function fetchData(visitor) {
 
     const query = `
     {
-      pullRequest: repository(owner: ${repoOwner}, name: ${repoName}) {
+      pullRequest: repository(owner: "${repoOwner}", name: "${repoName}") {
         ${frag}
       }
     }
@@ -142,7 +142,7 @@ async function fetchData(visitor) {
 
     const query = `
     {
-      repository(owner: ${repoOwner}, name: ${repoName}) {
+      repository(owner: "${repoOwner}", name: "${repoName}") {
         ${frag}
       }
     }
