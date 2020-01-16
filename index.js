@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 
-const {
-  graphql
-} = require('@octokit/graphql');
+const { graphql } = require('@octokit/graphql');
 const program = require('commander');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
@@ -12,7 +10,7 @@ program
   .requiredOption('-r, --right <type>', 'right side ref')
   .requiredOption('-t, --token <type>', 'GitHub API Token')
   .requiredOption('--owner', 'Repogitory owner')
-  .requiredOption('--name', 'Repogitory name')
+  .requiredOption('--name', 'Repogitory name');
 
 program.parse(process.argv);
 
@@ -23,20 +21,14 @@ const repoOwner = program.owner;
 const repoName = program.name;
 
 const getCommits = async () => {
-  const {
-    stdout,
-    stderr
-  } = await exec(
+  const { stdout, stderr } = await exec(
     `git log --pretty=format:'%h' --abbrev-commit --right-only ${leftRef}..${rightRef}`
   );
   return stdout;
 };
 
 const getPRs = async () => {
-  const {
-    stdout,
-    stderr
-  } = await exec(
+  const { stdout, stderr } = await exec(
     `git log --oneline --abbrev-commit --right-only --right-only ${leftRef}..${rightRef} | grep -Eo '#[0-9]+' | tr -d '#'`
   );
   return stdout;
@@ -119,9 +111,7 @@ async function fetchData(visitor) {
     for (key in result.pullRequest) {
       const raw = result.pullRequest[key];
 
-      const {
-        associatedPullRequests
-      } = raw;
+      const { associatedPullRequests } = raw;
 
       associatedPullRequests.nodes.forEach(element => {
         prs.push(element);
@@ -152,7 +142,7 @@ async function fetchData(visitor) {
 
     const query = `
     {
-      repository(owner: "eure", name: "pairs-ios") {
+      repository(owner: ${repoOwner}, name: ${repoName}) {
         ${frag}
       }
     }
@@ -220,11 +210,12 @@ const main = async () => {
         } else {
           return list.map(element => {
             return `- ${element.title} [#${element.number}](${element.permalink}) by @${element.author.login}`;
-          }).join `\n`;
+          }).join`\n`;
         }
       };
 
-      const displayLabels = [{
+      const displayLabels = [
+        {
           name: 'FEATURE DELETED',
           prefix: '🗑'
         },
