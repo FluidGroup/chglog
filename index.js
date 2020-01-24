@@ -1,18 +1,18 @@
 #!/usr/bin/env node
 
-const {
-  graphql
-} = require('@octokit/graphql');
+const { graphql } = require('@octokit/graphql');
 const program = require('commander');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
+const _ = require('lodash');
 
 program
   .requiredOption('-l, --left <type>', 'left side ref')
   .requiredOption('-r, --right <type>', 'right side ref')
   .requiredOption('-t, --token <type>', 'GitHub API Token')
   .requiredOption('--repo-owner <type>', 'Repository owner')
-  .requiredOption('--repo-name <type>', 'Repository name');
+  .requiredOption('--repo-name <type>', 'Repository name')
+  .option('--working_dir <type>', 'Path to git repo');
 
 program.parse(process.argv);
 
@@ -21,23 +21,18 @@ const leftRef = program.left;
 const token = program.token;
 const repoOwner = program.repoOwner;
 const repoName = program.repoName;
+const workingDir = program.working_dir || './';
 
-const getCommits = async () => {
-  const {
-    stdout,
-    stderr
-  } = await exec(
-    `git log --pretty=format:'%h' --abbrev-commit --right-only ${leftRef}..${rightRef}`
+const getCommitsFromGit = async () => {
+  const { stdout, stderr } = await exec(
+    `cd ${workingDir} && git log --pretty=format:'%h' --abbrev-commit --right-only ${leftRef}..${rightRef}`
   );
   return stdout;
 };
 
-const getPRs = async () => {
-  const {
-    stdout,
-    stderr
-  } = await exec(
-    `git log --oneline --abbrev-commit --right-only --right-only ${leftRef}..${rightRef} | grep -Eo '#[0-9]+' | tr -d '#'`
+const getPRsFromGit = async () => {
+  const { stdout, stderr } = await exec(
+    `cd ${workingDir} && git log --oneline --abbrev-commit --right-only --right-only ${leftRef}..${rightRef} | grep -Eo '#[0-9]+' | tr -d '#'`
   );
   return stdout;
 };
@@ -70,7 +65,7 @@ async function fetchData(visitor) {
   `;
 
   const fetchDataFromCommits = async () => {
-    const string = await getCommits();
+    const string = await getCommitsFromGit();
 
     const commitRefs = string.split('\n').filter(e => {
       return e.length > 0;
@@ -80,16 +75,17 @@ async function fetchData(visitor) {
       return [];
     }
 
-    const frag = commitRefs
-      .map(commitRef => {
-        return `ref_${commitRef}: object(expression: "${commitRef}") {
+    const fetch = async commitRefs => {
+      const frag = commitRefs
+        .map(commitRef => {
+          return `ref_${commitRef}: object(expression: "${commitRef}") {
       ...PR
     }
     `;
-      })
-      .join('\n');
+        })
+        .join('\n');
 
-    const query = `
+      const query = `
     {
       pullRequest: repository(owner: "${repoOwner}", name: "${repoName}") {
         ${frag}
@@ -108,20 +104,30 @@ async function fetchData(visitor) {
       }
     }
   `;
+      const result = await graphql(query, {
+        headers: {
+          authorization: `token ${token}`
+        }
+      });
+      return result.pullRequest;
+    };
 
-    const result = await graphql(query, {
-      headers: {
-        authorization: `token ${token}`
-      }
-    });
+    let pullRequests = {};
+
+    const chunks = _.chunk(commitRefs, 10);
+    for (i in chunks) {
+      const slice = chunks[i];
+      pullRequests = {
+        ...pullRequests,
+        ...(await fetch(slice))
+      };
+    }
 
     let prs = [];
-    for (key in result.pullRequest) {
-      const raw = result.pullRequest[key];
+    for (key in pullRequests) {
+      const raw = pullRequests[key];
 
-      const {
-        associatedPullRequests
-      } = raw;
+      const { associatedPullRequests } = raw;
 
       associatedPullRequests.nodes.forEach(element => {
         prs.push(element);
@@ -131,7 +137,7 @@ async function fetchData(visitor) {
   };
 
   const fetchDataFromPRNumbers = async () => {
-    const string = await getPRs();
+    const string = await getPRsFromGit();
     // console.log(string)
     const prNumbers = string.split('\n').filter(e => {
       return e.length > 0;
@@ -220,11 +226,12 @@ const main = async () => {
         } else {
           return list.map(element => {
             return `- ${element.title} [#${element.number}](${element.permalink}) by @${element.author.login}`;
-          }).join `\n`;
+          }).join`\n`;
         }
       };
 
-      const displayLabels = [{
+      const displayLabels = [
+        {
           name: 'FEATURE DELETED',
           prefix: '🗑'
         },
