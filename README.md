@@ -1,18 +1,29 @@
-# git-diff-gen
+# Pull-Request Picker from commits to generate the release-log
+
+## Installation
+
+```
+yarn add chglog
+```
 
 ## Usage
 
 ```
-yarn add git-diff-gen
-```
+Usage: chglog [options]
 
+Options:
+  -l, --left <type>     left side ref
+  -r, --right <type>    right side ref
+  -t, --token <type>    GitHub API Token
+  --repo-owner <type>   Repository owner
+  --repo-name <type>    Repository name
+  --working_dir <type>  Path to git repo
+  -h, --help            output usage information
 ```
-yarn run git-diff-gen -l master -r develop -t <GITHUB_API_TOKEN>
-```
-
-## Development
 
 ### Customize Template
+
+*Currently, does not support Template engine*
 
 Create Visitor object
 
