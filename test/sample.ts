@@ -1,4 +1,4 @@
-import fetchData from '../fetch';
+import { fetchData } from '../index';
 
 export const createSampleVistor = () => {
   const state = {

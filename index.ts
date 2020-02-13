@@ -1,2 +1,2 @@
-import './fetch';
-import './Visitor';
+export * from './fetch';
+export * from './Visitor';
