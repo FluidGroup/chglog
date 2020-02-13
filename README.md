@@ -1,4 +1,4 @@
-# Pull-Request Picker from commits to generate the release-log
+# Crawling pull-request with commit message and commit hash
 
 ## Installation
 
