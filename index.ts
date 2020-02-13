@@ -1,4 +1,2 @@
-module.exports = {
-  fetch: require('./fetch'),
-  basicVisitor: require('./visitor')
-};
+import './fetch';
+import './Visitor';

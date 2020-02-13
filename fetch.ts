@@ -1,7 +1,7 @@
 import util from 'util';
 import _ from 'lodash';
 import { graphql } from '@octokit/graphql';
-import { Visitor } from './visitor';
+import { Visitor } from './Visitor';
 const exec = util.promisify(require('child_process').exec);
 
 export type Context = {

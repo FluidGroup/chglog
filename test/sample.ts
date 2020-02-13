@@ -1,5 +1,4 @@
 import fetchData from '../fetch';
-import { Visitor } from '../visitor';
 
 export const createSampleVistor = () => {
   const state = {
