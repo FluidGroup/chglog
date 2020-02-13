@@ -13,12 +13,31 @@ export type Context = {
   workingDirectory: string;
 };
 
-export interface Response {
+export type Response = {
   pullRequest: Record<string, PullRequestNode>;
-}
+};
 
-type PullRequest = {
-  author: any;
+export type User = {
+  login: string;
+};
+
+export type Label = {
+  name: string;
+};
+
+export type PullRequest = {
+  author: User;
+  editor: User;
+  mergedBy: User;
+  labels: {
+    nodes: Label[];
+  };
+  merged: boolean;
+  title: string;
+  permalink: string;
+  bodyText: string;
+  number: number;
+  id: string;
 };
 
 export type PullRequestNode = {
@@ -73,6 +92,7 @@ const fetchData = async (context: Context, visitor: Visitor) => {
       }
     }
     id
+    bodyText
   }
   `;
 
