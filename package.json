@@ -1,6 +1,6 @@
 {
   "name": "chglog",
-  "version": "0.0.9",
+  "version": "0.1.0",
   "description": "A change log generator",
   "main": "index.ts",
   "scripts": {
