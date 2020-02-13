@@ -11,12 +11,19 @@ yarn add chglog
 Define a visitor
 
 ```ts
+export interface Visitor {
+  visitLabel(label: Label, source: PullRequest): void;
+  visitAuthor(author: User, source: PullRequest): void;
+}
+```
+
+```ts
 const createSampleVistor = () => {
   return {
-    visitLabel(label: any, source: any) {
+    visitLabel(label: Label, source: PullRequest) {
       ...
     },
-    visitAuthor(author, source) {
+    visitAuthor(author: User, source: PullRequest) {
       ...
     },   
 };
