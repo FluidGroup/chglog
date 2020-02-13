@@ -3,25 +3,13 @@
   // Hover to view descriptions of existing attributes.
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
-  "configurations": [
-    {
-      "type": "node",
-      "request": "launch",
-      "name": "Launch Program",
-      "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}/index.js",
-      "args": [
-        "--repo-owner",
-        "XXX",
-        "--repo-name",
-        "XXX",
-        "-l",
-        "origin/master",
-        "-r",
-        "origin/release/87.0.0",
-        "-t",
-        "XXX"
-      ]
-    }
-  ]
+  "configurations": [{
+    "type": "node",
+    "request": "launch",
+    "name": "Launch Program",
+    "skipFiles": ["<node_internals>/**"],
+    "program": "${workspaceFolder}/dist/test/sample.js",
+    "preLaunchTask": "build",
+    "outFiles": ["${workspaceFolder}/dist/**/*.js"]
+  }]
 }

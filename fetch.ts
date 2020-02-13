@@ -1,38 +1,54 @@
-const util = require('util');
-const _ = require('lodash');
-const {
-  graphql
-} = require('@octokit/graphql');
+import util from 'util';
+import _ from 'lodash';
+import { graphql } from '@octokit/graphql';
+import { Visitor } from './visitor';
 const exec = util.promisify(require('child_process').exec);
 
+export type Context = {
+  rightRef: string;
+  leftRef: string;
+  githubToken: string;
+  repoOwner: string;
+  repoName: string;
+  workingDirectory: string;
+};
 
-const getCommitsFromGit = async (leftRef, rightRef, workingDir) => {
-  const {
-    stdout,
-    stderr
-  } = await exec(
+export interface Response {
+  pullRequest: Record<string, PullRequestNode>;
+}
+
+type PullRequest = {
+  author: any;
+};
+
+export type PullRequestNode = {
+  associatedPullRequests: { nodes: PullRequest[] };
+};
+
+const getCommitsFromGit = async (
+  leftRef: string,
+  rightRef: string,
+  workingDir: string
+) => {
+  const { stdout }: { stdout: string } = await exec(
     `cd ${workingDir} && git log --pretty=format:'%h' --abbrev-commit --right-only ${leftRef}..${rightRef}`
   );
   return stdout;
 };
 
-const getPRsFromGit = async (leftRef, rightRef, workingDir) => {
-  const {
-    stdout,
-    stderr
-  } = await exec(
+const getPRsFromGit = async (
+  leftRef: string,
+  rightRef: string,
+  workingDir: string
+) => {
+  const { stdout }: { stdout: string } = await exec(
     `cd ${workingDir} && git log --oneline --abbrev-commit --right-only --right-only ${leftRef}..${rightRef} | grep -Eo '#[0-9]+' | tr -d '#'`
   );
   return stdout;
 };
 
-const fetchData = async (context, visitor) => {
-
-  const {
-    token,
-    repoOwner,
-    repoName
-  } = context
+const fetchData = async (context: Context, visitor: Visitor) => {
+  const { githubToken, repoOwner, repoName } = context;
 
   const framgent = `
   fragment PRParam on PullRequest {
@@ -61,7 +77,11 @@ const fetchData = async (context, visitor) => {
   `;
 
   const fetchDataFromCommits = async () => {
-    const string = await getCommitsFromGit(context.leftRef, context.rightRef, context.workingDir);
+    const string = await getCommitsFromGit(
+      context.leftRef,
+      context.rightRef,
+      context.workingDirectory
+    );
 
     const commitRefs = string.split('\n').filter(e => {
       return e.length > 0;
@@ -71,7 +91,7 @@ const fetchData = async (context, visitor) => {
       return [];
     }
 
-    const fetch = async commitRefs => {
+    const fetch = async (commitRefs: string[]) => {
       const frag = commitRefs
         .map(commitRef => {
           return `ref_${commitRef}: object(expression: "${commitRef}") {
@@ -100,43 +120,40 @@ const fetchData = async (context, visitor) => {
       }
     }
   `;
-      const result = await graphql(query, {
+
+      const result = (await graphql(query, {
         headers: {
-          authorization: `token ${token}`
+          authorization: `token ${githubToken}`
         }
-      });
-      return result.pullRequest;
+      })) as Response | null;
+      return result!.pullRequest;
     };
 
-    let pullRequests = {};
+    let pullRequests: Record<string, PullRequestNode> = {};
 
     const chunks = _.chunk(commitRefs, 10);
-    for (i in chunks) {
-      const slice = chunks[i];
+
+    for (let slice of chunks) {
       pullRequests = {
         ...pullRequests,
         ...(await fetch(slice))
       };
     }
 
-    let prs = [];
-    for (key in pullRequests) {
-      const raw = pullRequests[key];
+    let prs = Object.values(pullRequests)
+      .map(e => e.associatedPullRequests.nodes)
+      .flat();
 
-      const {
-        associatedPullRequests
-      } = raw;
-
-      associatedPullRequests.nodes.forEach(element => {
-        prs.push(element);
-      });
-    }
     return prs;
   };
 
   const fetchDataFromPRNumbers = async () => {
-    const string = await getPRsFromGit(context.leftRef, context.rightRef, context.workingDir);
-    // console.log(string)
+    const string = await getPRsFromGit(
+      context.leftRef,
+      context.rightRef,
+      context.workingDirectory
+    );
+
     const prNumbers = string.split('\n').filter(e => {
       return e.length > 0;
     });
@@ -167,22 +184,17 @@ const fetchData = async (context, visitor) => {
 
     const result = await graphql(query, {
       headers: {
-        authorization: `token ${token}`
+        authorization: `token ${githubToken}`
       }
+    }).catch(e => {
+      return e.data;
     });
 
-    let prs = [];
-    for (key in result.repository) {
-      const raw = result.repository[key];
-      // console.log(raw)
-      // raw.forEach(element => {
-      prs.push(raw);
-      // });
-    }
-    return prs;
+    const prs = Object.values(result.repository).filter(e => e !== null);
+    return prs as PullRequest[];
   };
 
-  let prs = [];
+  let prs: PullRequest[] = [];
 
   prs = prs.concat(await fetchDataFromCommits());
   prs = prs.concat(await fetchDataFromPRNumbers());
@@ -193,6 +205,6 @@ const fetchData = async (context, visitor) => {
       visitor.visitLabel(element, source);
     });
   });
-}
+};
 
-module.exports = fetchData
+export default fetchData;
