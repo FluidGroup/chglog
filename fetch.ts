@@ -66,7 +66,7 @@ const getPRsFromGit = async (
   return stdout;
 };
 
-const fetchData = async (context: Context, visitor: Visitor) => {
+export const fetchData = async (context: Context, visitor: Visitor) => {
   const { githubToken, repoOwner, repoName } = context;
 
   const framgent = `
@@ -226,5 +226,3 @@ const fetchData = async (context: Context, visitor: Visitor) => {
     });
   });
 };
-
-export default fetchData;
