@@ -160,9 +160,10 @@ export const fetchData = async (context: Context, visitor: Visitor) => {
       };
     }
 
-    let prs = Object.values(pullRequests)
-      .map(e => e.associatedPullRequests.nodes)
-      .flat();
+    let prs = _.flatMap(
+      Object.values(pullRequests),
+      e => e.associatedPullRequests.nodes
+    );
 
     return prs;
   };
