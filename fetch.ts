@@ -44,6 +44,10 @@ export type PullRequestNode = {
   associatedPullRequests: { nodes: PullRequest[] };
 };
 
+export const azs = async () => {
+  console.log('Hello');
+};
+
 const getCommitsFromGit = async (
   leftRef: string,
   rightRef: string,
