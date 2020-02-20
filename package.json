@@ -24,6 +24,7 @@
   "homepage": "https://github.com/muukii/chglog#readme",
   "dependencies": {
     "@octokit/graphql": "^4.3.1",
+    "@octokit/rest": "^16.43.1",
     "commander": "^4.0.1",
     "lodash": "^4.17.15"
   },

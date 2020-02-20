@@ -1,8 +1,9 @@
-import util from 'util';
-import _ from 'lodash';
-import { graphql } from '@octokit/graphql';
-import { Visitor } from './Visitor';
-const exec = util.promisify(require('child_process').exec);
+import util from "util";
+import _ from "lodash";
+import { graphql } from "@octokit/graphql";
+import { Octokit } from "@octokit/rest";
+import { Visitor } from "./Visitor";
+const exec = util.promisify(require("child_process").exec);
 
 export type Context = {
   rightRef: string;
@@ -44,8 +45,59 @@ export type PullRequestNode = {
   associatedPullRequests: { nodes: PullRequest[] };
 };
 
-export const azs = async () => {
-  console.log('Hello');
+type Commit = {
+  sha: string;
+  commit: {
+    author: {};
+    tree: {
+      sha: string;
+    };
+  };
+};
+
+type CompareResponseData = {
+  total_commits: number;
+  commits: Commit[];
+};
+
+export const azs = async (args: {
+  owner: string;
+  repo: string;
+  base: string;
+  head: string;
+  githubAccessToken: string;
+}) => {
+  const octokit = new Octokit({ auth: args.githubAccessToken });
+
+  const fetch = async (base: string, head: string) => {
+    return await octokit.repos.compareCommits(args);
+  };
+
+  let allCommits: Commit[] = [];
+  let stop = false;
+
+  let head: string = args.head;
+
+  while (!stop) {
+    console.log("fetch", args.base, head);
+    const result = await fetch(args.base, head);
+    const data = result.data as CompareResponseData;
+    console.log(data.commits.length, data.total_commits);
+    allCommits = allCommits.concat(data.commits);
+    if (data.commits.length == data.total_commits) {
+      console.log("done", args.base, head);
+      stop = true;
+    } else {
+      head = _.first(data.commits).sha;
+      console.log("next", args.base, head);
+    }
+  }
+
+  console.log(allCommits.length);
+
+  const log = allCommits.map(e => e.sha).join("\n");
+
+  console.log(log);
 };
 
 const getCommitsFromGit = async (
@@ -107,7 +159,7 @@ export const fetchData = async (context: Context, visitor: Visitor) => {
       context.workingDirectory
     );
 
-    const commitRefs = string.split('\n').filter(e => {
+    const commitRefs = string.split("\n").filter(e => {
       return e.length > 0;
     });
 
@@ -123,7 +175,7 @@ export const fetchData = async (context: Context, visitor: Visitor) => {
     }
     `;
         })
-        .join('\n');
+        .join("\n");
 
       const query = `
     {
@@ -179,7 +231,7 @@ export const fetchData = async (context: Context, visitor: Visitor) => {
       context.workingDirectory
     );
 
-    const prNumbers = string.split('\n').filter(e => {
+    const prNumbers = string.split("\n").filter(e => {
       return e.length > 0;
     });
 
@@ -194,7 +246,7 @@ export const fetchData = async (context: Context, visitor: Visitor) => {
         }
     `;
       })
-      .join('\n');
+      .join("\n");
 
     const query = `
     {
