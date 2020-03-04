@@ -61,7 +61,7 @@ const getPRsFromGit = async (
   workingDir: string
 ) => {
   const { stdout }: { stdout: string } = await exec(
-    `cd ${workingDir} && git log --oneline --abbrev-commit --right-only --right-only ${leftRef}..${rightRef} | grep -Eo '#[0-9]+' | tr -d '#'`
+    `cd ${workingDir} && git log --oneline --abbrev-commit --right-only "${leftRef}..${rightRef}" | grep -Eo '#[0-9]+' | tr -d '#'`
   );
   return stdout;
 };
