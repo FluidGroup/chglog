@@ -6,6 +6,7 @@ export const createSampleVistor = () => {
   };
 
   return {
+    visit(source: any) {},
     visitLabel(label: any, source: any) {
       let array = state.prs[label.name];
       if (array == null) {

@@ -220,7 +220,12 @@ export const fetchData = async (context: Context, visitor: Visitor) => {
   prs = prs.concat(await fetchDataFromCommits());
   prs = prs.concat(await fetchDataFromPRNumbers());
 
-  prs.forEach(source => {
+  const unique: Record<string, PullRequest> = {};
+  for (const pr of prs) {
+    unique[pr.id] = pr;
+  }
+
+  Object.values(unique).forEach(source => {
     visitor.visit(source);
     visitor.visitAuthor(source.author, source);
     source.labels.nodes.forEach(element => {
