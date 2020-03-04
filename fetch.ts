@@ -221,6 +221,7 @@ export const fetchData = async (context: Context, visitor: Visitor) => {
   prs = prs.concat(await fetchDataFromPRNumbers());
 
   prs.forEach(source => {
+    visitor.visit(source);
     visitor.visitAuthor(source.author, source);
     source.labels.nodes.forEach(element => {
       visitor.visitLabel(element, source);
