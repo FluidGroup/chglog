@@ -1,34 +1,14 @@
 {
-  "name": "chglog",
-  "version": "0.1.9",
-  "description": "A change log generator",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc --build tsconfig.json",
-    "prepublishOnly": "npm run build"
-  },
-  "bin": {
-    "chglog": "./cli.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/muukii/chglog.git"
-  },
-  "author": "muukii <muukii.muukii@gmail.com> (http://muukii.app/)",
+  "name": "yarn-workspace",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "yusuke mori <210861+jiska@users.noreply.github.com>",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/muukii/chglog/issues"
-  },
-  "homepage": "https://github.com/muukii/chglog#readme",
-  "dependencies": {
-    "@octokit/graphql": "^4.3.1",
-    "commander": "^4.0.1",
-    "lodash": "^4.17.15"
-  },
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "devDependencies": {
-    "@types/lodash": "^4.14.149",
-    "typescript": "^3.7.5"
+    "lerna": "^3.20.2"
   }
 }
