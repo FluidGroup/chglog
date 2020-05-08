@@ -36,6 +36,8 @@ program
   .description('Generate changelog')
   .requiredOption('-l, --left <type>', 'left side ref')
   .requiredOption('-r, --right <type>', 'right side ref')
+  .requiredOption('--repo <type>', 'repo')
+  .requiredOption('--owner <type>', 'owner')
   .requiredOption(
     '--github_token <type>',
     'Access token for GitHub',
@@ -46,8 +48,8 @@ program
       base: program.left,
       head: program.right,
       githubToken: program.github_token,
-      repo: process.env.GITHUB_REPO!,
-      owner: process.env.GITHUB_OWNER!,
+      repo: program.repo,
+      owner: program.owner,
     });
     console.log(result);
   });
