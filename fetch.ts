@@ -220,6 +220,8 @@ export const fetchData = async (context: Context, visitor: Visitor) => {
   prs = prs.concat(await fetchDataFromCommits());
   prs = prs.concat(await fetchDataFromPRNumbers());
 
+  prs = prs.filter(pr => pr.merged == true);
+
   const unique: Record<string, PullRequest> = {};
   for (const pr of prs) {
     unique[pr.id] = pr;
