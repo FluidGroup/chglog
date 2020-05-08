@@ -1,6 +1,6 @@
 {
   "name": "chglog",
-  "version": "0.1.9",
+  "version": "1.0.0",
   "description": "A change log generator",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
