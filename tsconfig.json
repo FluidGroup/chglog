@@ -9,7 +9,6 @@
     "skipLibCheck": true,
     "declaration": true,
     "pretty": true,
-    "newLine": "lf",
-    "outDir": "dist"
+    "newLine": "lf"
   }
 }

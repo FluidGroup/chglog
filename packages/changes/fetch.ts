@@ -103,7 +103,7 @@ export const fetchData = async (context: Context, visitor: Visitor) => {
       context.workingDirectory
     );
 
-    const commitRefs = string.split('\n').filter(e => {
+    const commitRefs = string.split('\n').filter((e) => {
       return e.length > 0;
     });
 
@@ -113,7 +113,7 @@ export const fetchData = async (context: Context, visitor: Visitor) => {
 
     const fetch = async (commitRefs: string[]) => {
       const frag = commitRefs
-        .map(commitRef => {
+        .map((commitRef) => {
           return `ref_${commitRef}: object(expression: "${commitRef}") {
       ...PR
     }
@@ -143,8 +143,8 @@ export const fetchData = async (context: Context, visitor: Visitor) => {
 
       const result = (await graphql(query, {
         headers: {
-          authorization: `token ${githubToken}`
-        }
+          authorization: `token ${githubToken}`,
+        },
       })) as Response | null;
       return result!.pullRequest;
     };
@@ -156,13 +156,13 @@ export const fetchData = async (context: Context, visitor: Visitor) => {
     for (let slice of chunks) {
       pullRequests = {
         ...pullRequests,
-        ...(await fetch(slice))
+        ...(await fetch(slice)),
       };
     }
 
     let prs = _.flatMap(
       Object.values(pullRequests),
-      e => e.associatedPullRequests.nodes
+      (e) => e.associatedPullRequests.nodes
     );
 
     return prs;
@@ -175,7 +175,7 @@ export const fetchData = async (context: Context, visitor: Visitor) => {
       context.workingDirectory
     );
 
-    const prNumbers = string.split('\n').filter(e => {
+    const prNumbers = string.split('\n').filter((e) => {
       return e.length > 0;
     });
 
@@ -184,7 +184,7 @@ export const fetchData = async (context: Context, visitor: Visitor) => {
     }
 
     const frag = prNumbers
-      .map(number => {
+      .map((number) => {
         return `pr_${number}: pullRequest(number: ${number}) {
           ...PRParam
         }
@@ -205,13 +205,13 @@ export const fetchData = async (context: Context, visitor: Visitor) => {
 
     const result = await graphql(query, {
       headers: {
-        authorization: `token ${githubToken}`
-      }
-    }).catch(e => {
+        authorization: `token ${githubToken}`,
+      },
+    }).catch((e) => {
       return e.data;
     });
 
-    const prs = Object.values(result.repository).filter(e => e !== null);
+    const prs = Object.values(result.repository).filter((e) => e !== null);
     return prs as PullRequest[];
   };
 
@@ -220,17 +220,17 @@ export const fetchData = async (context: Context, visitor: Visitor) => {
   prs = prs.concat(await fetchDataFromCommits());
   prs = prs.concat(await fetchDataFromPRNumbers());
 
-  prs = prs.filter(pr => pr.merged == true);
+  prs = prs.filter((pr) => pr.merged == true);
 
   const unique: Record<string, PullRequest> = {};
   for (const pr of prs) {
     unique[pr.id] = pr;
   }
 
-  Object.values(unique).forEach(source => {
+  Object.values(unique).forEach((source) => {
     visitor.visit(source);
     visitor.visitAuthor(source.author, source);
-    source.labels.nodes.forEach(element => {
+    source.labels.nodes.forEach((element) => {
       visitor.visitLabel(element, source);
     });
   });
