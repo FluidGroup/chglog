@@ -10,10 +10,10 @@ const genName = (pr: PullRequest) => {
     .trim();
 
   const body = [
-    `- 🔸${pr.title} [#${pr.number}](${pr.permalink}) by @${pr.author.login}`,
+    `- ${pr.title} [#${pr.number}](${pr.permalink}) by @${pr.author.login}`,
     (() => {
       if (tag.length > 0) {
-        return `  - 🏷 ${tag}`;
+        return `  - ${tag}`;
       } else {
         return '';
       }
@@ -28,12 +28,16 @@ const genName = (pr: PullRequest) => {
 export default () => {
   type State = {
     allPRs: PullRequest[];
+    // group : PR
     prs: Record<string, PullRequest[]>;
+    tags: Record<string, PullRequest[]>;
   };
   const state: State = {
     allPRs: [],
     prs: {},
+    tags: {},
   };
+
   return {
     visitLabel(label: Label, source: PullRequest) {
       if (!label.name.includes('Group:')) {
@@ -56,10 +60,22 @@ export default () => {
     },
     visit(source: PullRequest) {
       state.allPRs.push(source);
+
+      source.labels.nodes.forEach((e) => {
+        let array = state.tags[e.name];
+        if (array == null) {
+          state.tags[e.name] = [];
+          array = state.tags[e.name];
+        }
+        array.push(source);
+      });
     },
     visitAuthor(author: User, source: PullRequest) {},
     generate() {
-      type Composed = { label: string; prs: PullRequest[] };
+      type Composed = {
+        label: string;
+        prs: PullRequest[];
+      };
 
       let buf: Composed[] = [];
       for (const key in state.prs) {
@@ -78,6 +94,18 @@ export default () => {
       const ungrouped = state.allPRs.filter((e) => !groupedIDs.includes(e.id));
 
       const grouped = buf;
+
+      const renderTotal = () => {
+        let line = '|tag|number of PRs|\n';
+        line += '|--|--:|\n';
+        for (const key in state.tags) {
+          if (key.includes('Tag:')) {
+            const count = state.tags[key].length;
+            line += `|${key.replace('Tag: ', '')} | ${count}|\n`;
+          }
+        }
+        return line;
+      };
 
       const renderGrouped = (item: Composed) => {
         return `
@@ -102,6 +130,8 @@ ${item
 
       const body = `
 Number of PRs : ${state.allPRs.length}
+
+${renderTotal()}
 
 ${grouped.map(renderGrouped).join('\n\n')}
 
