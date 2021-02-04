@@ -1,5 +1,5 @@
 {
-  "name": "chglog-cli",
+  "name": "@muukii/chglog-cli",
   "version": "1.2.0",
   "description": "A change log generator",
   "main": "dist/index.js",
@@ -24,8 +24,8 @@
   },
   "homepage": "https://github.com/muukii/chglog#readme",
   "dependencies": {
-    "chglog": "^1.2.0",
-    "chglog_grouping_generator": "^1.2.0",
+    "@muukii/chglog_fetcher": "^1.2.0",
+    "@muukii/chglog_grouping_generator": "^1.2.0",
     "commander": "^7.0.0"
   },
   "devDependencies": {

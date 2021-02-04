@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-import { fetchData } from 'chglog';
+import { fetchData } from "@muukii/chglog_fetcher";
 import commander from 'commander';
-import createVisitor from 'chglog_grouping_generator';
+import createVisitor from '@muukii/chglog_grouping_generator';
 
 type Args = {
   base: string;

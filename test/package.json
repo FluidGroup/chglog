@@ -23,10 +23,10 @@
   },
   "homepage": "https://github.com/muukii/chglog#readme",
   "dependencies": {
-    "chglog": "^1.2.0",
-    "chglog_grouping_generator": "^1.2.0"
+    "@muukii/chglog": "^1.2.0",
+    "@muukii/chglog_grouping_generator": "^1.2.0"
   },
   "devDependencies": {
-    "typescript": "^3.7.5"
+    "typescript": "^4.1.3"
   }
 }
