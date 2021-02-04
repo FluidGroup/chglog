@@ -1,4 +1,4 @@
-import { User, PullRequest, Label } from 'chglog';
+import { User, PullRequest, Label } from '@muukii/chglog_fetcher';
 import _ from 'lodash';
 
 const genName = (pr: PullRequest) => {
