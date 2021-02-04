@@ -1,0 +1,38 @@
+{
+  "name": "@muukii/chglog-cli",
+  "version": "1.4.0",
+  "description": "A change log generator",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc --build tsconfig.json",
+    "prepublishOnly": "npm run build",
+    "dev": "npm run build && node dist/index.js"
+  },
+  "bin": {
+    "chglog": "dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/muukii/chglog.git"
+  },
+  "author": "muukii <muukii.muukii@gmail.com> (http://muukii.app/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/muukii/chglog/issues"
+  },
+  "homepage": "https://github.com/muukii/chglog#readme",
+  "dependencies": {
+    "@muukii/chglog_fetcher": "^1.4.0",
+    "@muukii/chglog_grouping_generator": "^1.4.0",
+    "commander": "^7.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.1.3"
+  },
+  "gitHead": "7cda4a9f928ad727d362da697eb6ce04364ffcc8",
+  "publishConfig": {
+    "access": "public"
+  }
+}
