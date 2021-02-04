@@ -2,10 +2,14 @@ console.log("Loaded my cutsom generator")
 
 module.exports = () => {
 
+    const state = {
+        titles: []
+    }
+
     return {
 
         visit(pullRequest) {
-            console.log(pullRequest)
+            state.titles.push(pullRequest.title)
         },
 
         visitLabel(label, pullRequest) {
@@ -17,8 +21,8 @@ module.exports = () => {
         },
 
         render() {
-
-            return "Empty"
+            
+            return JSON.stringify(state, null, 2)
         }
     }
 }
