@@ -6,10 +6,10 @@
   "configurations": [{
     "type": "node",
     "request": "launch",
-    "name": "Launch Program",
+    "name": "Run CLI",
     "skipFiles": ["<node_internals>/**"],
     "program": "${workspaceFolder}/dist/test/sample.js",
-    "preLaunchTask": "build",
+    "preLaunchTask": "build_all",
     "outFiles": ["${workspaceFolder}/dist/**/*.js"]
   }]
 }

@@ -203,7 +203,7 @@ export const fetchData = async (context: Context, visitor: Visitor) => {
     
   `;
 
-    const result = await graphql(query, {
+    const result: any = await graphql(query, {
       headers: {
         authorization: `token ${githubToken}`,
       },

@@ -2,11 +2,16 @@
   // See https://go.microsoft.com/fwlink/?LinkId=733558 
   // for the documentation about the tasks.json format
   "version": "2.0.0",
-  "tasks": [{
-    "type": "npm",
-    "label": "build",
-    "script": "build",
-    "group": "build",
-    "problemMatcher": []
+  "tasks": [
+    {
+      "type": "shell",
+      "label": "build_all",
+      "command": "lerna",
+      "args": ["exec", "yarn", "run", "build"],
+      "group": "build",
+      "problemMatcher": [],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
   }]
 }

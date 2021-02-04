@@ -25,7 +25,7 @@ const createSampleVistor = () => {
     },
     visitAuthor(author: User, source: PullRequest) {
       ...
-    },   
+    },
 };
 ```
 
@@ -36,13 +36,34 @@ const visitor = createSampleVistor();
 
 await fetchData(
   {
-    rightRef: '',
-    leftRef: '',
-    githubToken: '',
-    repoOwner: '',
-    repoName: '',
-    workingDirectory: ''
+    rightRef: "",
+    leftRef: "",
+    githubToken: "",
+    repoOwner: "",
+    repoName: "",
+    workingDirectory: "",
   },
   visitor
 );
+```
+
+## Development
+
+Install dependencies
+
+```
+$ lerna bootstrap
+```
+
+Build all packages
+
+```
+$ lerna exec yarn run build
+```
+
+Run CLI
+
+```
+$ cd ./packages/cli
+$ yarn run dev
 ```
