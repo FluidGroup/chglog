@@ -27,5 +27,9 @@
   "devDependencies": {
     "@types/lodash": "^4.14.149",
     "typescript": "^3.7.5"
+  },
+  "gitHead": "7cda4a9f928ad727d362da697eb6ce04364ffcc8",
+  "publishConfig": {
+    "access": "public"
   }
 }
