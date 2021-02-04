@@ -13,8 +13,10 @@ $ cd /path/to/your-repo
 ```
 
 ```
-$ chglog changelog -l 8.5.0 -r 8.6.0 --owner VergeGroup --repo Verge
+$ chglog changelog --github_token <YOUR_TOKEN> -l 8.5.0 -r 8.6.0 --owner VergeGroup --repo Verge
 ```
+
+> `--github_token` reads also enviroment variable `GITHUB_ACCESS_TOKEN`.
 
 ## Customization - Inject JS
 
