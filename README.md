@@ -1,12 +1,22 @@
-# Crawling pull-request with commit message and commit hash
+# A changelog generator that regarding pulls and specified commits.
 
 ## Installation
 
 ```
-yarn add chglog
+npm install -g chglog
 ```
 
 ## Usage
+
+```
+$ cd /path/to/your-repo
+```
+
+```
+$ chglog changelog -l 8.5.0 -r 8.6.0 --owner VergeGroup --repo Verge
+```
+
+## Customization
 
 Define a visitor
 
@@ -48,6 +58,13 @@ await fetchData(
 ```
 
 ## Development
+
+Module resolutions:
+
+- core
+- extensions
+- cli
+
 
 Install dependencies
 
