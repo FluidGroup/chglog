@@ -1,7 +1,7 @@
 {
   "name": "chglog-test",
   "version": "1.2.0",
-  "description": "A change log generator",
+  "description": "Test",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -24,8 +24,7 @@
   "homepage": "https://github.com/muukii/chglog#readme",
   "dependencies": {
     "chglog": "^1.2.0",
-    "chglog_grouping_generator": "^1.2.0",
-    "commander": "^5.1.0"
+    "chglog_grouping_generator": "^1.2.0"
   },
   "devDependencies": {
     "typescript": "^3.7.5"
