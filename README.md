@@ -117,6 +117,19 @@ $ chglog changelog --github_token <YOUR_TOKEN> -l 8.5.0 -r 8.6.0 --owner VergeGr
 
 > `--github_token` reads also enviroment variable `GITHUB_ACCESS_TOKEN`.
 
+## Setting your repository up for creating a effective changelog
+
+`chglog` provides a built-in generator as a module.  
+It would be used when we set no custom generator.
+
+That default generator has following features:
+
+- Grouping pull-request
+- Displaying the tags each pull-requests
+- Displaying summary of the tags of pull-request
+
+> WIP
+
 ## Customization - Inject JS
 
 In addition using built-in generator, we can inject javascript code that generates a changelog with our own rules.
