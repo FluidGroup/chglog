@@ -1,4 +1,18 @@
-# A changelog generator that regarding pulls and specified commits.
+# A changelog generator that regarding pulls and specified commits in THE SPECIFIC RANGE.
+
+## First look you can create
+
+<img width="600px" src="https://user-images.githubusercontent.com/1888355/107057716-17564b80-6817-11eb-9788-e285d4e2a0a3.png"/>
+
+## Motivation
+
+We can find a lot of tools that generate summarized changelogs from git and GitHub.  
+However I could not find something more simple tool which generates from any range.
+
+So this library separated several modules as followings:  
+* Fetching module - It fetches the all of pull-reqests in the range as possible.  
+* Generator module - It generates text from the gathered pull-requests from fetching module with visitor pattern.
+* CLI module - It calls fetching module and passing data to generator module and then output in console.
 
 ## Installation
 
@@ -8,13 +22,22 @@ npm install -g @muukii/chglog
 
 ## Example 
 
-From: [VergeGroup/Verge](https://github.com/VergeGroup/Verge)
-
 ```sh
-$ chglog changelog -l 8.0.0 -r 8.6.0 --owner VergeGroup --repo Verge
+$ cd ~/muukii/github/Verge
+$ chglog changelog -l <REF> -r <REF> --github_token <TOKEN>
 ```
 
-<details><summary>CLICK ME</summary>
+**`REF` can be used tag, commitish, branch.**
+For example:
+- `0a6929d00aedb196bb718710c54da48f4483b27a`
+- `main`
+- `emotes/origin/main`
+- `v1.2.0`
+- Anything token that can be used in git command => `git log <TOKEN>`
+
+From: [VergeGroup/Verge](https://github.com/VergeGroup/Verge)
+
+<details><summary>Eample output</summary>
 <p>
 
 
@@ -112,7 +135,7 @@ Because, Over GitHub API can't get well the all of commits between the specified
 So take care cloning git repo, chglog can get only commits which .git has.
 
 ```
-$ chglog changelog --github_token <YOUR_TOKEN> -l 8.5.0 -r 8.6.0 --owner VergeGroup --repo Verge
+$ chglog changelog --github_token <YOUR_TOKEN> -l 8.5.0 -r 8.6.0
 ```
 
 > `--github_token` reads also enviroment variable `GITHUB_ACCESS_TOKEN`.
@@ -127,6 +150,19 @@ That default generator has following features:
 - Grouping pull-request
 - Displaying the tags each pull-requests
 - Displaying summary of the tags of pull-request
+
+Setting up steps:
+
+**Define a label that has `Grooup: ` prefix.**
+
+<img width="172" alt="CleanShot 2021-02-06 at 01 06 12@2x" src="https://user-images.githubusercontent.com/1888355/107058096-8469e100-6817-11eb-9217-9f776658e674.png">
+
+
+**Define a label that has `Tag: ` prefix**
+<img width="134" alt="CleanShot 2021-02-06 at 01 06 57@2x" src="https://user-images.githubusercontent.com/1888355/107058169-9ea3bf00-6817-11eb-9646-4171a57e7381.png">
+
+You can add groups and tags as you need.  
+Regarding those, the built-in generator parses and prints.
 
 > WIP
 
