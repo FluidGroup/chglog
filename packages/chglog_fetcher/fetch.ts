@@ -1,8 +1,8 @@
-import util from 'util';
-import _ from 'lodash';
-import { graphql } from '@octokit/graphql';
-import { Visitor } from './Visitor';
-const exec = util.promisify(require('child_process').exec);
+import util from "util";
+import _ from "lodash";
+import { graphql } from "@octokit/graphql";
+import { Visitor } from "./Visitor";
+const exec = util.promisify(require("child_process").exec);
 
 export type Context = {
   rightRef: string;
@@ -51,7 +51,9 @@ const getCommitsFromGit = async (
 ) => {
   const { stdout }: { stdout: string } = await exec(
     `cd ${workingDir} && git log --pretty=format:'%h' --abbrev-commit --right-only ${leftRef}..${rightRef}`
-  );
+  ).catch((error) => {
+    throw error;
+  });
   return stdout;
 };
 
@@ -62,7 +64,9 @@ const getPRsFromGit = async (
 ) => {
   const { stdout }: { stdout: string } = await exec(
     `cd ${workingDir} && git log --oneline --abbrev-commit --right-only "${leftRef}..${rightRef}" | grep -Eo '#[0-9]+' | tr -d '#'`
-  );
+  ).catch((error) => {
+    throw error;
+  });
   return stdout;
 };
 
@@ -101,9 +105,11 @@ export const fetchData = async (context: Context, visitor: Visitor) => {
       context.leftRef,
       context.rightRef,
       context.workingDirectory
-    );
+    ).catch((error) => {
+      throw error;
+    });
 
-    const commitRefs = string.split('\n').filter((e) => {
+    const commitRefs = string.split("\n").filter((e) => {
       return e.length > 0;
     });
 
@@ -119,7 +125,7 @@ export const fetchData = async (context: Context, visitor: Visitor) => {
     }
     `;
         })
-        .join('\n');
+        .join("\n");
 
       const query = `
     {
@@ -175,7 +181,7 @@ export const fetchData = async (context: Context, visitor: Visitor) => {
       context.workingDirectory
     );
 
-    const prNumbers = string.split('\n').filter((e) => {
+    const prNumbers = string.split("\n").filter((e) => {
       return e.length > 0;
     });
 
@@ -190,7 +196,7 @@ export const fetchData = async (context: Context, visitor: Visitor) => {
         }
     `;
       })
-      .join('\n');
+      .join("\n");
 
     const query = `
     {
