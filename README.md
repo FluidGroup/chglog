@@ -158,13 +158,12 @@ Setting up steps:
 <img width="172" alt="CleanShot 2021-02-06 at 01 06 12@2x" src="https://user-images.githubusercontent.com/1888355/107058096-8469e100-6817-11eb-9217-9f776658e674.png">
 
 
-**Define a label that has `Tag: ` prefix**
+**Define a label that has `Tag: ` prefix**  
+
 <img width="134" alt="CleanShot 2021-02-06 at 01 06 57@2x" src="https://user-images.githubusercontent.com/1888355/107058169-9ea3bf00-6817-11eb-9646-4171a57e7381.png">
 
 You can add groups and tags as you need.  
 Regarding those, the built-in generator parses and prints.
-
-> WIP
 
 ## Customization - Inject JS
 
