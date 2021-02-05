@@ -106,6 +106,11 @@ Number of PRs : 31
 $ cd /path/to/your-repo
 ```
 
+> ⚠️ 
+Currently this cli must run in the directory where has .git.  
+Because, Over GitHub API can't get well the all of commits between the specified ref range.  
+So take care cloning git repo, chglog can get only commits which .git has.
+
 ```
 $ chglog changelog --github_token <YOUR_TOKEN> -l 8.5.0 -r 8.6.0 --owner VergeGroup --repo Verge
 ```
