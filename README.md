@@ -20,24 +20,9 @@ So this library separated several modules as followings:
 npm install -g @muukii/chglog
 ```
 
-## Example 
+## Usage 
 
-```sh
-$ cd ~/muukii/github/Verge
-$ chglog changelog -l <REF> -r <REF> --github_token <TOKEN>
-```
-
-**`REF` can be used tag, commitish, branch.**
-For example:
-- `0a6929d00aedb196bb718710c54da48f4483b27a`
-- `main`
-- `emotes/origin/main`
-- `v1.2.0`
-- Anything token that can be used in git command => `git log <TOKEN>`
-
-From: [VergeGroup/Verge](https://github.com/VergeGroup/Verge)
-
-<details><summary>Eample output</summary>
+<details><summary>Click to see an example output</summary>
 <p>
 
 
@@ -139,6 +124,7 @@ $ chglog changelog --github_token <YOUR_TOKEN> -l 8.5.0 -r 8.6.0
 ```
 
 > `--github_token` reads also enviroment variable `GITHUB_ACCESS_TOKEN`.
+> Or if you use [`gh`](https://github.com/cli/cli) and authenticated, that auth infomation would be used.
 
 ## Setting your repository up for creating a effective changelog
 
