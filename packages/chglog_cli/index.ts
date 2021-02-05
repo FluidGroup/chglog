@@ -6,6 +6,9 @@ import createVisitor from "@muukii/chglog_grouping_generator";
 import path from "path";
 const getGitHubURL = require("github-url-from-git");
 import chalk from "chalk";
+import yaml from "yaml";
+import fs from "fs";
+import os from "os";
 
 import Git from "nodegit";
 
@@ -57,6 +60,27 @@ const main = async () => {
     };
   };
 
+  const getGitHubTokenFromGH = () => {
+    const file = fs.readFileSync(
+      `${os.homedir()}/.config/gh/hosts.yml`,
+      "utf8"
+    );
+    const object = yaml.parse(file);
+
+    const githubNode = object["github.com"];
+
+    if (!githubNode) {
+      return null;
+    }
+
+    const token = githubNode["oauth_token"];
+
+    if (!token) {
+      return null;
+    }
+    return token;
+  };
+
   const currentRepo = await getGitHubOwnerRepo();
 
   const program = new commander.Command();
@@ -72,7 +96,7 @@ const main = async () => {
     .requiredOption(
       "--github_token <type>",
       "Access token for GitHub",
-      process.env.GITHUB_ACCESS_TOKEN
+      getGitHubTokenFromGH() || process.env.GITHUB_ACCESS_TOKEN
     )
     .option("-g, --generator <type>", "generator")
     .action(async (program: any) => {
