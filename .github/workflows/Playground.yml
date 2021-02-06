@@ -34,8 +34,6 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 1
-      - name: Install yarn
-        run: npm install -g yarn  
       - name: Install lerna
         run: npm install -g lerna
       - name: Bootstrap
