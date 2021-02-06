@@ -1,0 +1,53 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Playground
+
+
+# Controls when the action will run. 
+on:
+  workflow_dispatch:
+    inputs:
+      repository:
+        description: "Repository <owner>/<repo>"
+        required: true
+      left:
+        descripton: "Base"
+        required: true
+      right:
+        description: "Head"
+        required: true
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          repository: ${{ github.event.inputs.repository }}  
+          path: "./_target"
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+      - name: Install yarn
+        run: npm install -g yarn  
+      - name: Install lerna
+        run: npm install -g lerna
+      - name: Bootstrap
+        run: lerna bootstrap
+      - name: Build
+        run: lerna exec yarn run build
+      - name: Link
+        run: cd ./packages/chglog_cli && npm link
+      - name: Generate
+        run: cd ./_target && chglog changelog -l -r --github_token $PUBLIC_REPO_ONLY_TOKEN
+        env: 
+          PUBLIC_REPO_ONLY_TOKEN: ${{ secrets.PUBLIC_REPO_ONLY_TOKEN }}
+          LEFT: ${{ github.event.inputs.left }}
+          RIGHT: ${{ github.event.inputs.right }}
+        
